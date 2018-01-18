@@ -2,6 +2,7 @@ package impl
 
 import interfaces.*
 import models.*
+import kotlin.system.measureNanoTime
 
 class BellmanFordRegular(private val graph: Graph) : ISolver {
 
@@ -14,6 +15,14 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
     private var target: Vertex? = null
 
     init{
+        initVariables()
+    }
+
+    private fun initVariables(){
+        distances.clear()
+        predecessor.clear()
+        path.clear()
+        edgesOnPath = listOf()
         // Initialize maps
         graph.vertices.forEach {
             distances[it] = 9999
@@ -31,8 +40,12 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
     }
 
     override fun solve(): ISolver {
-        relaxEdges()
-        checkForNegativeWeightCycles()
+        measureNanoTime {
+            relaxEdges()
+            checkForNegativeWeightCycles()
+        }.let { time ->
+            println("Execution time: $time ns")
+        }
         return this
     }
 
@@ -47,6 +60,9 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
         }
     }
 
+    /**
+     * Checks if there are any negative-weight cycles
+     */
     private fun checkForNegativeWeightCycles(){
         for((from, to, weight) in graph.edges){
             if(distances[from]!! + weight < distances[to]!!){
@@ -55,13 +71,18 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
         }
     }
 
+    /**
+     * Sets end path vertex.
+     */
     override fun to(finish: Vertex): ISolver {
         target = finish
         return this
     }
 
+    /**
+     * Prints shortest path.
+     */
     override fun printPath(){
-
         path.add(target!!)
         var current: Vertex = target!!
 
@@ -89,6 +110,9 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
         path.clear()
     }
 
+    /**
+     * Uses exporter to export graph and shortest path for drawing.
+     */
     override fun export(exporter: IExporter): String {
         return exporter.export(graph,edgesOnPath)
     }

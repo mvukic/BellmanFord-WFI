@@ -1,5 +1,7 @@
+import impl.BellmanFordFaster
 import impl.BellmanFordRegular
 import impl.DotExporter
+import impl.WarshallFloydIngerman
 import models.Edge
 import models.Graph
 import models.Vertex
@@ -7,7 +9,7 @@ import java.io.File
 
 fun main(args: Array<String>) {
 
-    // Initialize vertices
+    // Zadatak 2.2
     val A = Vertex(0, "A")
     val B = Vertex(1, "B")
     val C = Vertex(2, "C")
@@ -27,7 +29,7 @@ fun main(args: Array<String>) {
     val R = Vertex(16, "R")
     val S = Vertex(17, "S")
 
-    //Initialize edges
+
     val AB = Edge(A, B, 2)
     val AC = Edge(A, C, 6)
     val AD = Edge(A, D, 12)
@@ -56,13 +58,27 @@ fun main(args: Array<String>) {
     val PS = Edge(P, S, -6)
     val RS = Edge(R, S, 3)
 
-
     val graph = Graph().apply {
         vertices = listOf(A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,R,S)
         edges = listOf(AB,AC,AD,BE,BC,CF,DH,EG,FH,FE,GI,HI,HK,HL,HM,IJ,JN,KJ,KO,LP,ML,MR,NO,NS,OS,PS,RS)
     }
 
-    val solver = BellmanFordRegular(graph)
+    // Primjer predavanje slajd 30.
+//    val A = Vertex(0, "A")
+//    val B = Vertex(1, "B")
+//    val C = Vertex(2, "C")
+//    val D = Vertex(3, "D")
+//    val AB = Edge(A,B,5)
+//    val AC = Edge(A,C,4)
+//    val BC = Edge(B,C,-2)
+//    val BD = Edge(B,D,3)
+//    val CD = Edge(C,D,4)
+//    val graph = Graph().apply {
+//        vertices = listOf(A, B, C, D)
+//        edges = listOf(AB, AC, BC, BC, BD, CD)
+//    }
+
+    val solver = WarshallFloydIngerman(graph)
 
     // Solve path
     solver.from(A)
@@ -71,12 +87,11 @@ fun main(args: Array<String>) {
             .printPath()
 
     // Export to DOT format
-    val exporter = DotExporter()
-    val dot = solver.export(exporter)
-    println(dot)
+//    val exporter = DotExporter()
+//    val dot = solver.export(exporter)
 
-    File("dot.txt").printWriter().use { out ->
-        out.println(dot)
-    }
+//    File("dot.txt").printWriter().use { out ->
+//        out.println(dot)
+//    }
 
 }
