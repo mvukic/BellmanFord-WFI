@@ -14,7 +14,7 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
     private val distances: MutableMap<Vertex,Int> = mutableMapOf()
     // Map of vertex and its predecessor on the shortest path
     private val predecessor: MutableMap<Vertex, Vertex?> = mutableMapOf()
-    // List ov vertices on shortest path
+    // List of vertices on shortest path
     private val path: MutableList<Vertex> = mutableListOf()
     // List of edges that construct the shortest path
     private var edgesOnPath: List<Edge> = listOf()
@@ -52,6 +52,9 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
         return this
     }
 
+    /**
+     * Approximation to the correct distance is gradually replaced by more accurate values
+     */
     private fun relaxEdges(){
         for(i in 1 until graph.vertices.count()){
             for((from, to, weight) in graph.edges){
@@ -82,6 +85,9 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
         return this
     }
 
+    /**
+     * Generates list of consecutive edges on shortest path.
+     */
     override fun generateEdgesOnPath(): ISolver{
         path.add(target!!)
         var current: Vertex = target!!

@@ -128,6 +128,9 @@ class WarshallFloydIngerman(private val graph: Graph) : ISolver{
         return this
     }
 
+    /**
+     * Prints shortest path.
+     */
     override fun printPath() {
         generateEdgesOnPath()
         val sb = StringBuilder()
@@ -141,7 +144,9 @@ class WarshallFloydIngerman(private val graph: Graph) : ISolver{
         // Clear shortest path
         path.clear()
     }
-
+    /**
+     * Uses exporter to export graph and shortest path for drawing.
+     */
     override fun export(exporter: IExporter): String {
         return exporter.export(graph, edgesOnPath)
     }

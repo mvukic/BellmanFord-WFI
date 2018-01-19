@@ -15,6 +15,7 @@ class BellmanFordFaster(private val graph: Graph) : ISolver {
 
     // Distances from source vertex to other vertices
     private val distances: MutableMap<Vertex,Int> = mutableMapOf()
+    // Map of vertex and its predecessor on the shortest path
     private val predecessor: MutableMap<Vertex, Vertex?> = mutableMapOf()
 
     // List ov vertices on shortest path
@@ -31,7 +32,9 @@ class BellmanFordFaster(private val graph: Graph) : ISolver {
     // Map of edges with corresponding weights
     private val mapOfWeights: MutableMap<Pair<Vertex,Vertex>,Int> = mutableMapOf()
 
+    // Starting vertex
     private var source: Vertex? = null
+    // Ending vertex
     private var target: Vertex? = null
 
     init {
@@ -124,6 +127,9 @@ class BellmanFordFaster(private val graph: Graph) : ISolver {
         return this
     }
 
+    /**
+     * Prints shortest path.
+     */
     override fun printPath() {
         generateEdgesOnPath()
         val sb = StringBuilder()
@@ -138,6 +144,9 @@ class BellmanFordFaster(private val graph: Graph) : ISolver {
         path.clear()
     }
 
+    /**
+     * Uses exporter to export graph and shortest path for drawing.
+     */
     override fun export(exporter: IExporter): String {
         return exporter.export(graph, edgesOnPath)
     }
