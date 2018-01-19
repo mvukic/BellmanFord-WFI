@@ -63,7 +63,7 @@ fun main(args: Array<String>) {
         edges = listOf(AB,AC,AD,BE,BC,CF,DH,EG,FH,FE,GI,HI,HK,HL,HM,IJ,JN,KJ,KO,LP,ML,MR,NO,NS,OS,PS,RS)
     }
 
-    // Primjer predavanje slajd 30.
+    // Primjer predavanje slajd 30. (A->B->C->D)
 //    val A = Vertex(0, "A")
 //    val B = Vertex(1, "B")
 //    val C = Vertex(2, "C")
@@ -78,17 +78,46 @@ fun main(args: Array<String>) {
 //        edges = listOf(AB, AC, BC, BC, BD, CD)
 //    }
 
-    val solver = WarshallFloydIngerman(graph)
+    //Primjer predavanje slajd 39. (3->2->4->1->5)
+//    val A = Vertex(0, "1")
+//    val B = Vertex(1, "2")
+//    val C = Vertex(2, "3")
+//    val D = Vertex(3, "4")
+//    val E = Vertex(3, "5")
+//
+//    val AB = Edge(A, B, 3)
+//    val AC = Edge(A, C, 8)
+//    val AE = Edge(A, E, -4)
+//    val BE = Edge(B, E, 7)
+//    val BD = Edge(B, D, 1)
+//    val CB = Edge(C, B, 4)
+//    val DC = Edge(D, C, -5)
+//    val DA = Edge(D, A, 2)
+//    val ED = Edge(E, D, 6)
+//
+//    val graph = Graph().apply {
+//        vertices = listOf(A, B, C, D, E)
+//        edges = listOf(AB,AC,AE,BE,BD,CB,DC,DA,ED)
+//    }
+    val exporter = DotExporter()
 
-    // Solve path
-    solver.from(A)
+    val solver1 = BellmanFordRegular(graph)
+    solver1.from(A)
             .to(P)
             .solve()
             .printPath()
 
-    // Export to DOT format
-//    val exporter = DotExporter()
-//    val dot = solver.export(exporter)
+    val solver2 = BellmanFordFaster(graph)
+    solver2.from(A)
+            .to(P)
+            .solve()
+            .printPath()
+
+    val solver3 = WarshallFloydIngerman(graph)
+    solver3.from(A)
+            .to(P)
+            .solve()
+            .printPath()
 
 //    File("dot.txt").printWriter().use { out ->
 //        out.println(dot)

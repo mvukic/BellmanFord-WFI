@@ -9,15 +9,26 @@ import kotlin.system.measureNanoTime
 
 class BellmanFordFaster(private val graph: Graph) : ISolver {
 
+    companion object {
+        val name = "Bellman-Ford (faster)"
+    }
+
+    // Distances from source vertex to other vertices
     private val distances: MutableMap<Vertex,Int> = mutableMapOf()
     private val predecessor: MutableMap<Vertex, Vertex?> = mutableMapOf()
 
+    // List ov vertices on shortest path
     private val path: MutableList<Vertex> = mutableListOf()
+    // List of edges that construct the shortest path
     private var edgesOnPath: List<Edge> = listOf()
 
+    // List of vertices whose distance has changed
     private val toBeChecked: MutableList<Vertex> = mutableListOf()
+
+    // Map of adjacent vertices to every vertex
     private val adjacent: MutableMap<Vertex,List<Vertex>> = mutableMapOf()
 
+    // Map of edges with corresponding weights
     private val mapOfWeights: MutableMap<Pair<Vertex,Vertex>,Int> = mutableMapOf()
 
     private var source: Vertex? = null
@@ -58,7 +69,8 @@ class BellmanFordFaster(private val graph: Graph) : ISolver {
                 }
             }
         }.let { time ->
-            println("Execution time: $time ns")
+            println(BellmanFordFaster.name)
+            println("\tExecution time: $time ns (${time/1000000} ms)")
         }
         return this
     }
@@ -92,7 +104,7 @@ class BellmanFordFaster(private val graph: Graph) : ISolver {
         return this
     }
 
-    override fun printPath() {
+    override fun generateEdgesOnPath(): ISolver{
         path.add(target!!)
         var current: Vertex = target!!
 
@@ -109,12 +121,18 @@ class BellmanFordFaster(private val graph: Graph) : ISolver {
         edgesOnPath = path.asReversed().windowed(2,1){
             graph.edges.find { edge -> edge.from == it[0] &&  edge.to == it[1] }!!
         }
+        return this
+    }
 
+    override fun printPath() {
+        generateEdgesOnPath()
+        val sb = StringBuilder()
+        sb.append("\t")
         edgesOnPath.forEachIndexed { index, edge ->
-            print("${edge.from.name} -(${edge.weight})> ")
-            if(index == edgesOnPath.count()-1) print(edge.to.name)
+            sb.append("${edge.from.name} -(${edge.weight})> ")
+            if(index == edgesOnPath.count()-1) sb.append(edge.to.name)
         }
-        println()
+        println(sb.toString())
 
         // Clear shortest path
         path.clear()

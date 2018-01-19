@@ -14,4 +14,6 @@ interface ISolver {
 
     fun export(exporter: IExporter): String
 
+    fun generateEdgesOnPath(): ISolver
+
 }

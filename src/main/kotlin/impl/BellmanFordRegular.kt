@@ -6,23 +6,25 @@ import kotlin.system.measureNanoTime
 
 class BellmanFordRegular(private val graph: Graph) : ISolver {
 
+    companion object {
+        val name = "Bellman-Ford (regular)"
+    }
+
+    // Distances from source vertex to other vertices
     private val distances: MutableMap<Vertex,Int> = mutableMapOf()
+    // Map of vertex and its predecessor on the shortest path
     private val predecessor: MutableMap<Vertex, Vertex?> = mutableMapOf()
+    // List ov vertices on shortest path
     private val path: MutableList<Vertex> = mutableListOf()
+    // List of edges that construct the shortest path
     private var edgesOnPath: List<Edge> = listOf()
 
+    // Starting vertex
     private var source: Vertex? = null
+    // Ending vertex
     private var target: Vertex? = null
 
     init{
-        initVariables()
-    }
-
-    private fun initVariables(){
-        distances.clear()
-        predecessor.clear()
-        path.clear()
-        edgesOnPath = listOf()
         // Initialize maps
         graph.vertices.forEach {
             distances[it] = 9999
@@ -44,7 +46,8 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
             relaxEdges()
             checkForNegativeWeightCycles()
         }.let { time ->
-            println("Execution time: $time ns")
+            println(BellmanFordRegular.name)
+            println("\tExecution time: $time ns (${time/1000000} ms)")
         }
         return this
     }
@@ -66,7 +69,7 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
     private fun checkForNegativeWeightCycles(){
         for((from, to, weight) in graph.edges){
             if(distances[from]!! + weight < distances[to]!!){
-                throw Error("models.Graph contains a negative-weight cycle")
+                throw Error("Graph contains a negative-weight cycle")
             }
         }
     }
@@ -79,10 +82,7 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
         return this
     }
 
-    /**
-     * Prints shortest path.
-     */
-    override fun printPath(){
+    override fun generateEdgesOnPath(): ISolver{
         path.add(target!!)
         var current: Vertex = target!!
 
@@ -99,12 +99,21 @@ class BellmanFordRegular(private val graph: Graph) : ISolver {
         edgesOnPath = path.asReversed().windowed(2,1){
             graph.edges.find { edge -> edge.from == it[0] &&  edge.to == it[1] }!!
         }
+        return this
+    }
 
+    /**
+     * Prints shortest path.
+     */
+    override fun printPath(){
+        generateEdgesOnPath()
+        val sb = StringBuilder()
+        sb.append("\t")
         edgesOnPath.forEachIndexed { index, edge ->
-            print("${edge.from.name} -(${edge.weight})> ")
-            if(index == edgesOnPath.count()-1) print(edge.to.name)
+            sb.append("${edge.from.name} -(${edge.weight})> ")
+            if(index == edgesOnPath.count()-1) sb.append(edge.to.name)
         }
-        println()
+        println(sb.toString())
 
         // Clear shortest path
         path.clear()
