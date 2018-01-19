@@ -101,26 +101,27 @@ fun main(args: Array<String>) {
 //    }
     val exporter = DotExporter()
 
-    val solver1 = BellmanFordRegular(graph)
-    solver1.from(A)
-            .to(P)
-            .solve()
-            .printPath()
-
-    val solver2 = BellmanFordFaster(graph)
-    solver2.from(A)
-            .to(P)
-            .solve()
-            .printPath()
+//    val solver1 = BellmanFordRegular(graph)
+//    solver1.from(A)
+//            .to(P)
+//            .solve()
+//            .printPath()
+//
+//    val solver2 = BellmanFordFaster(graph)
+//    solver2.from(A)
+//            .to(P)
+//            .solve()
+//            .printPath()
 
     val solver3 = WarshallFloydIngerman(graph)
-    solver3.from(A)
+    val dot = solver3.from(A)
             .to(P)
             .solve()
-            .printPath()
+            .generateEdgesOnPath()
+            .export(exporter)
 
-//    File("dot.txt").printWriter().use { out ->
-//        out.println(dot)
-//    }
+    File("dot.txt").printWriter().use { out ->
+        out.println(dot)
+    }
 
 }
