@@ -1,1 +1,1 @@
-& "D:\Program Files (x86)\Graphviz2.38\bin\dot.exe" -Tpng ./dot.txt -o ./output.png
+& "path to dot.exe from graphviz" -Tpng ./dot.txt -o ./output.png
